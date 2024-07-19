@@ -1,0 +1,83 @@
+///////////////////////////
+How to start a new project 
+///////////////////////////
+
+django-admin startproject < app_name >
+
+///////////////////////////
+Settings
+///////////////////////////
+
+- config for project
+- first thing you do when making a project 
+- set up db, apps, etc 
+
+
+///////////////////////////
+Creating a Django App 
+///////////////////////////
+- run this where manage.py is (similar to package.json)
+python3 manage.py startapp < app_name >
+
+///////////////////////////
+Mapping
+///////////////////////////
+
+Need 2 url files 
+1: In catcollector | urls.py 
+2: inside main_app | urls.py (similar to our routes file)
+
+
+///////////////////////////
+Django Templates
+///////////////////////////
+
+DTL - Django Template Language
+Jinga2 - Flask 
+
+DTl is preconfigured and very powerful 
+- create templates dir 
+- folder name matters, lowercase templates
+
+
+///////////////////////////
+Synamic Templating Content
+///////////////////////////
+
+we put the dynamic content inbetween the blocks 
+- tempaltes inherit from parent 
+- ex:
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+      {% block title %} 
+      {% endblock %}
+    </title>
+  </head>
+  <body>
+    {% block body %} 
+    {% endblock %}
+  </body>
+</html>
+
+
+{% extends "base.html" %} 
+{% block title %} 
+  Main Page 
+{% endblock %} 
+{% block body %}
+<h1>Content!</h1>
+{% endblock %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Main Page</title>
+  </head>
+  <body>
+    <h1>Content!</h1>
+  </body>
+</html>
