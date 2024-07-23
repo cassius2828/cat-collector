@@ -24,10 +24,16 @@
       <nav>
         <ul>
           <li>
-            <a href="{% url "cat_index" %}">All Cats</a>
+            <a href="{% url "cat-index" %}">All Cats</a>
           </li>
           <li>
-            <a href="{% url "cat_create" %}">Create a Cat</a>
+            <a href="{% url "cat-create" %}">Create a Cat</a>
+          </li>
+          <li>
+            <a href="{% url "toy-create" %}">Add a Toy</a>
+          </li>
+          <li>
+            <a href="{% url "toy-index" %}">View Toys</a>
           </li>
           <li>
             <a href="/about">About</a>

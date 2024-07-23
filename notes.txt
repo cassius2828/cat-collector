@@ -178,3 +178,85 @@ ____________________________
   # absolute redirect in class
     def get_absolute_url(self):
         return reverse("cat_details", kwargs={"cat_id": self.id})
+
+
+///////////////////////////
+Where the variables in django-html comes from 
+///////////////////////////
+
+Whatever the model name is, the lowercase version of that class is what is being used 
+ex: 
+
+class CatUpdate(UpdateView):
+    model = Cat
+    fields = [...]
+
+
+  model = Cat is where that variable comes from 
+
+
+  ///////////////////////////
+  Redirects 
+  ///////////////////////////
+
+  1. Looks for success_url in our class based view 
+  2. Looks for get_absolute_url func in our model 
+  3. Will error out 
+
+
+  ///////////////////////////
+  Select Creation for Form 
+  ///////////////////////////
+
+  Select menu with value and display 
+
+  MEALS = (
+    ('B', 'Breakfast),
+    ('L', 'Lunch),
+    ('D', 'Dinner),
+  )
+
+  class Feeding(models.Model):
+      meal = models.CharField(
+        max_length=1,
+        choices=MEALS,
+        default=MEALS[0][0]
+      )
+  def __str__(self):
+  return f"{self.get_meal_display()} on {self.date}"
+
+  ____________________________
+  get_name_dislay
+  ____________________________
+  This takes whatever the value is of the select and displays the readable text to the user 
+  - B value will result in Breakfast for the user 
+  - this gets made for you if you have "choices=__" as one of your options 
+  - this stores the value in the db instead of the whole character that the user sees 
+  - ex: takes L and return Lunch 
+
+
+  ///////////////////////////
+  Getting values in Django-html 
+  ///////////////////////////
+
+  we can access the related data (data associated with the primary key of the main table )
+  by accessing the parent table to teh child table_set
+
+  for feeding in cat.feeding_set.all
+
+  If you have the child row, you can get the parent by just accessing the foreign key 
+  f = Feeding.objects.first()
+  f.cat = The cat row 
+
+///////////////////////////
+PSQL Foreign Keys 
+///////////////////////////
+
+- always singlular
+- always the name of the parent key 
+- django automatically uses it 
+- django convention is the lowercase of the model name 
+ex in django: cat for Cat 
+ex in db: cat_id 
+- can access any of the cat properties once we get the fk 
+- vice versa 

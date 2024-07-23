@@ -1,16 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic import DetailView, ListView
 
 # Create your views here.
 
 # View functions are like controller function
 # they process http requests
 
-from .models import Cat
+from .models import Cat, Toy
+from .forms import FeedingForm
 
 
+# ///////////////////////////
+# * View Functions
+# ///////////////////////////
 def home(request):
     return render(request, "home.html")
 
@@ -29,9 +34,34 @@ def cat_index(request):
 def cat_details(request, cat_id):
     # no need for async await bc python is synchronous
     cat = Cat.objects.get(id=cat_id)
-    return render(request, "cats/details.html", {"cat": cat})
+    feeding_form = FeedingForm()  # creates a form from our class
+    return render(
+        request, "cats/details.html", {"cat": cat, "feeding_form": feeding_form}
+    )
 
 
+def add_feeding(request, cat_id):
+    # using the data from the POST req from the client (think req.body, request.POST)
+    form = FeedingForm(request.POST)
+    if form.is_valid():
+        # still need to add the cat_id to the feeding
+        # create an object to be saved to the db
+        new_feeding = form.save(commit=False)
+        # add the cat_id to the obj that is going to be added as a new row in the feeding table in
+        # psql
+        new_feeding.cat_id = cat_id
+        new_feeding.save()  # enter the new row in the feeding table in psql
+    return redirect("cat-details", cat_id=cat_id)
+
+
+def toy_index(request):
+    toys = Toy.objects.all()
+    return render(request, "main_app/toy_list.html", {"toys": toys})
+
+
+# ///////////////////////////
+# * Class Based Views
+# ///////////////////////////
 class CatCreate(CreateView):
     model = Cat
     fields = "__all__"  # referencing the model fields
@@ -43,29 +73,34 @@ class CatCreate(CreateView):
 class CatUpdate(UpdateView):
     model = Cat
     # disallow the updating of the cat's name
-    fields = ['breed', 'description', 'age']
+    fields = ["breed", "description", "age"]
+
 
 class CatDelete(DeleteView):
     model = Cat
     # since we just deleted the resource, we have to go to the index now
     # so we need to put the abs url here
-    success_url = '/cats/'
+    success_url = "/cats/"
 
 
-# temporary data until we config our models
+class ToyCreate(CreateView):
+    model = Toy
+    fields = "__all__"
 
 
-# class Cat:
-#     def __init__(self, name, breed, description, age):
-#         self.name = name
-#         self.breed = breed
-#         self.description = description
-#         self.age = age
+class ToyUpdate(UpdateView):
+    model = Toy
+    fields = "__all__"
 
 
-# cats = [
-#     Cat("Dobbie", "Sphinx", "Loves treats", 3),
-#     Cat("bear", "Sphinx", "Loves fighting", 9),
-#     Cat("taco", "Sphinx", "Loves lindsey", 3),
-#     Cat("smudge", "Tiger", "Loves luna", 0),
-# ]
+class ToyDelete(DeleteView):
+    model = Toy
+    success_url = "/toys/"
+
+
+class ToyDetail(DetailView):
+    model = Toy
+
+
+class ToyList(ListView):
+    model = Toy
