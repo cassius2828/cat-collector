@@ -81,3 +81,100 @@ we put the dynamic content inbetween the blocks
     <h1>Content!</h1>
   </body>
 </html>
+
+
+///////////////////////////
+PSQL models with django
+///////////////////////////
+
+Models:
+- refer to Model class or an instance of that class 
+- use Model to refer to Model class and 
+
+Each model is defined as a python class that inherits from dhango.db.models.Model 
+
+class Cat(models.Model):
+    name = models.Model.name 
+
+    ///////////////////////////
+    Migrations
+    ///////////////////////////
+
+    Everytime we create or edit a model, then we run a migration command
+    - anytime the database is changed in our model, we must run a migration to actually change the database 
+    python3 manage.py migrate
+
+    ///////////////////////////
+    Create migration file 
+    ///////////////////////////
+    
+    - python3 manage.py makemigrations
+
+    ///////////////////////////
+    Models Purpose
+    ///////////////////////////
+
+    - communicate and alter tables 
+    - create migration files 
+
+    remember,  migration files determine the shape or structure of our TABLES 
+    python3 manage.py migrate CONFIRMS AND APPLYS THE CHANGES
+
+
+    ///////////////////////////
+    Django ways 
+    ///////////////////////////
+
+    When fixing or changing things in database, you should focus on the django way of doing it 
+    so everything is in Synamic
+    ex: django migrate fix columns, etc 
+
+    If you were to have to change a column name with data already present, you have multiple ways to solve issues 
+    - add default values to new foreign keys with data in it already 
+    - you can find ways to navigate, but psql will catch many simple errors, like typos, early on and tell you 
+
+
+    ///////////////////////////
+    Django ORM 
+    ///////////////////////////
+
+    ____________________________
+    Performing CRUD in a pythony interactive shell 
+    ____________________________
+
+    ///////////////////////////
+    Create 
+    ///////////////////////////
+
+____________________________
+Use class models as a view 
+____________________________
+
+  class CatCreate(CreateView):
+    model = Cat
+    fields = '__all__' # referencing the model fields
+
+
+
+    In the templating html, put 
+    {{ form.as_table }}
+    and it will automatically generate the form as a table with inputs, all fields from class included 
+
+    ____________________________
+    CSRF TOKEN
+    ____________________________
+    - helps browser id the right form 
+
+
+  ____________________________
+  Redirects 
+  ____________________________
+
+  - looks for redirect after making post or put requests 
+  - typically will go to index or show page 
+  - will look for absolute path 
+
+  (In Model Class)
+  # absolute redirect in class
+    def get_absolute_url(self):
+        return reverse("cat_details", kwargs={"cat_id": self.id})
